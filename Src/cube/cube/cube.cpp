@@ -14,6 +14,9 @@ GLint faces[6][4] = {  /* Vertex indices for the 6 faces of a cube. */
 	{ 4, 5, 1, 0 },{ 5, 6, 2, 1 },{ 7, 4, 0, 3 } };
 GLfloat vertices[8][3];  /* Will be filled in with X,Y,Z vertexes. */
 
+int screenWidth = 800;
+int screenHeight = 600;
+
 void drawBox(void)
 {
 	int i;
@@ -80,7 +83,7 @@ void init(void)
 	/* Setup the view of the cube. */
 	glMatrixMode(GL_PROJECTION);
 	gluPerspective( /* field of view in degree */ 40.0,
-		/* aspect ratio */ 1.0,
+		/* aspect ratio */ (float)screenWidth/ (float)screenHeight,
 		/* Z near */ 1.0, /* Z far */ 100.0);
 	glMatrixMode(GL_MODELVIEW);
 	gluLookAt(10.0, 10.0, 10.0,  /* eye is at (0,0,5) */
@@ -93,14 +96,29 @@ void init(void)
 							// 	glRotatef(-20, 0.0, 0.0, 1.0);
 }
 
+
+void keyboardCB(unsigned char key, int x, int y)
+{
+	switch (key)
+	{
+	case 27: // ESCAPE
+		exit(0);
+		break;
+	default:
+		;
+	}
+}
+
 bool isLoop = true;
 bool isRead = false;
 void glThred(int argc, char **argv)
 {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutInitWindowSize(screenWidth, screenHeight);  // window size
 	glutCreateWindow("red 3D lighted cube");
 	glutDisplayFunc(display);
+	glutKeyboardFunc(keyboardCB);
 	init();
 	isRead = true;
 	glutMainLoop();
